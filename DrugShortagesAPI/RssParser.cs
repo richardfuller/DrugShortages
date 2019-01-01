@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DrugShortagesAPI
@@ -9,7 +10,7 @@ namespace DrugShortagesAPI
     public class RssParser
     {
 
-        public async System.Threading.Tasks.Task<List<FeedItem>> GetListAsync(string feedUrl)
+        public async Task<List<FeedItem>> GetListAsync(string feedUrl)
         {
             var articles = new List<FeedItem>();
             using (var client = new HttpClient())
@@ -41,8 +42,6 @@ namespace DrugShortagesAPI
             public string titleText { get; set; }
             public string mainText { get; set; }
             public string redirectionUrl { get; set; }
-
-
         }
     }
 }
