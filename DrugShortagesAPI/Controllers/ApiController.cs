@@ -9,54 +9,36 @@ using DrugShortagesAPI;
 
 namespace DrugShortagesAPI.Controllers
 {
-    [Route("api/shortages")]
-    public class ShortageController : Controller
+    [Route("{feed}")]
+    [Route("api/{feed}")]
+    public class ApiController : Controller
     {
-        private string ShortageURL = "https://www.ashp.org/rss/shortages/";
-        // GET: api/values
-        [HttpGet]
-        public async Task<List<RssParser.FeedItem>> GetAsync()
-        {
-            RssParser shortages = new RssParser(); 
-            return await shortages.GetListAsync(ShortageURL);
-        }
-
-    }
-
-    [Route("api/discontinued")]
-    public class UnavilableController : Controller
-    {
-        private string UnavailableURL = "https://www.ashp.org/rss/notavailable/";
-        [HttpGet]
-        public async Task<List<RssParser.FeedItem>> GetAsync()
-        {
-            RssParser discontinued = new RssParser();
-            return await discontinued.GetListAsync(UnavailableURL);
-        }
-    }
-
-    [Route("api/resolved")]
-    public class ResolvedController : Controller
-    {
+        //These should all be moved to appsettings.json or ENV eventually
+        private string shortageURL = "https://www.ashp.org/rss/shortages/";
+        private string discontinuedURL = "https://www.ashp.org/rss/notavailable/";
         private string resolvedURL = "https://www.ashp.org/rss/resolved/";
-        [HttpGet]
-        public async Task<List<RssParser.FeedItem>> GetAsync()
-        {
-            RssParser resolved = new RssParser();
-            return await resolved.GetListAsync(resolvedURL);
-        }
-    }
-
-
-    [Route("api/notavailable")]
-    public class NotAvailableController : Controller
-    {
         private string notavailableURL = "https://www.ashp.org/rss/nopresentations";
-        [HttpGet]
-        public async Task<List<RssParser.FeedItem>> GetAsync()
+
+        public async Task<List<RssParser.FeedItem>> GetItemsAsync(string feed)
         {
-            RssParser notavailable = new RssParser();
-            return await notavailable.GetListAsync(notavailableURL);
+            RssParser rssParser = new RssParser();
+            switch (feed.ToLower())
+            {
+                case "shortage":
+                case "shortages":
+                    return await rssParser.GetListAsync(shortageURL);
+                case "dc":
+                case "discontinued":
+                    return await rssParser.GetListAsync(discontinuedURL);
+                case "resolved":
+                    return await rssParser.GetListAsync(resolvedURL);
+                case "unavailable":
+                case "notavailable":
+                    return await rssParser.GetListAsync(notavailableURL);
+                default:
+                    return await rssParser.GetListAsync(shortageURL);
+            }
         }
+
     }
 }
