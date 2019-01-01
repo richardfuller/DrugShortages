@@ -27,14 +27,16 @@ namespace DrugShortagesAPI
                                     uid = item.Elements().First(i => i.Name.LocalName == "guid").Value,
                                     mainText = item.Elements().First(i => i.Name.LocalName == "description").Value,
                                     redirectionUrl = item.Elements().First(i => i.Name.LocalName == "link").Value,
+                                    //Will receive a JSON formatting error if this parameter is not parsed to UTC.
                                     updateDate = DateTime.Parse(item.Elements().First(i => i.Name.LocalName == "pubDate").Value).ToUniversalTime(),
                                     titleText = item.Elements().First(i => i.Name.LocalName == "title").Value
                                 };
+                //Limit feed items to previous 7 days per Flash Briefing dev specifications
                 articles = feedItems.ToList().FindAll(i => i.updateDate >= DateTime.Today.AddDays(-7));
                 return articles;
             }
         }
-
+        //When this object is serialized to JSON, it will match the required parameters for Amazon Alexa's Flash Briefing
         public class FeedItem
         {
             public string uid { get; set; }
