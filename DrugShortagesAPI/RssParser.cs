@@ -25,7 +25,8 @@ namespace DrugShortagesAPI
                                 select new FeedItem
                                 {
                                     uid = item.Elements().First(i => i.Name.LocalName == "guid").Value,
-                                    mainText = item.Elements().First(i => i.Name.LocalName == "description").Value,
+                                    //I'm being a little snarky here and I have no users of this skill..
+                                    mainText = "Oh god another one: " + item.Elements().First(i => i.Name.LocalName == "description").Value,
                                     redirectionUrl = item.Elements().First(i => i.Name.LocalName == "link").Value,
                                     //Will receive a JSON formatting error if this parameter is not parsed to UTC.
                                     updateDate = DateTime.Parse(item.Elements().First(i => i.Name.LocalName == "pubDate").Value).ToUniversalTime(),
